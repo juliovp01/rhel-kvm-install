@@ -1,0 +1,9 @@
+---
+## Role to deploy Satellite 6.1
+- name: MAIN TASK | Installing and Configuring KVM Host
+  hosts: hypervisor
+  vars_files:
+    - vars/main.yml
+  remote_user: root
+  tasks:
+    - include: tasks/main.yml

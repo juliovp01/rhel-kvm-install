@@ -1,0 +1,9 @@
+---
+# handlers file for juliovp01.rhel-kvm-install
+
+- name: enable_service
+  sudo: yes
+  service: 
+    enabled: yes
+    name: libvirtd
+    state: started

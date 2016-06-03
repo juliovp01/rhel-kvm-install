@@ -1,0 +1,7 @@
+---
+# tasks file for juliovp01.rhel-kvm-install
+# tasks files on main.yml as include arguments
+- include: registration.yml
+- include: install.yml
+- include: template.yml
+- include: create_vm.yml

@@ -1,0 +1,14 @@
+---
+#Registering system with RHN.
+- name: rhn | registering system with RHN
+  command: /usr/bin/subscription-manager register --username={{ rhn_user }} --password={{ rhn_password }} --name={{ hostname_full }}
+  tags:
+    - rhn
+  ignore_errors: yes
+
+#Enabling the repos
+- name: rhn | enabling the right repos
+  command: /usr/bin/subscription-manager repos --disable "*" --enable rhel-7-server-rpms --enable rhel-7-server-rh-common-rpms --enable rhel-server-rhscl-7-rpms
+  tags:
+    - rhn
+  ignore_errors: yes

@@ -1,0 +1,37 @@
+---
+#Create the template 
+
+- name: prepare | create directory for Virtual Machines
+  become: yes
+  file:
+    path: "{{ vm_directory }}"
+    state: directory
+    owner: root
+    group: root
+    mode: 0775
+    recurse: yes
+
+- name: prepare | create template file
+  become: yes
+  shell: qemu-img create -f qcow2 {{ vm_directory}}/{{ template_name }}.qcow2 {{ template_size }}
+
+
+- name: prepare | register rhel-guest-image-7 name
+  become: yes
+  shell:  ls /usr/share/rhel-guest-image-7/ | grep qcow2
+  register: vm
+
+- debug: var=vm.stdout_lines
+
+- name: prepare | expand file with rhel7-image
+  become: yes
+  shell: virt-resize --expand /dev/sda1 /usr/share/rhel-guest-image-7/{{ item }} {{ vm_directory}}/{{ template_name }}.qcow2
+  with_items: vm.stdout_lines
+
+- name: prepare | set root password
+  become: yes
+  shell: virt-customize -a {{ vm_directory}}/{{ template_name }}.qcow2 --root-password password:{{ root_password }}
+
+- name: prepare | remove cloud init
+  become: yes
+  shell: virt-customize -a {{ vm_directory}}/{{ template_name }}.qcow2 --run-command 'yum remove cloud-init* -y'
